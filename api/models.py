@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 # Create your models here.
 
 
@@ -27,6 +29,7 @@ class Images (models.Model):
     
 
 class Advertisement(models.Model):
+    
     CHOICES = [
     ('Mobiles', (
             ('Mobile_Phones', 'Mobile Phones'),
@@ -61,8 +64,8 @@ class Advertisement(models.Model):
         )
     ),
    ]
+
     buyer = models.ForeignKey(Buyer,  on_delete=models.CASCADE)
-    categories = models.CharField(max_length =30 ,choices=CHOICES, null=False,blank=False)
     title = models.CharField(max_length=20 , null=False , blank= False)
     views = models.IntegerField(default=0,null=True , blank=True)
     price = models.FloatField(default=0.0,null=True , blank=True)
@@ -70,10 +73,15 @@ class Advertisement(models.Model):
     company = models.CharField(max_length=20 , null=False , blank= False)
     state = models.BooleanField(default=False)
     description = models.TextField(max_length=100,null=True , blank=True)
-    # images = models.ManyToManyField(Images)
+    images = models.ManyToManyField(Images)
+    categories = models.CharField(max_length=30, choices=CHOICES, null=False, blank=False)
 
-    # Is_Trending = models.BooleanField(default=False)
-    
     def __str__(self):
-    
         return self.title
+
+   
+
+@receiver(pre_delete, sender=Advertisement)
+def delete_advertisement_images(sender, instance, **kwargs):
+    for image in instance.images.all():
+        image.delete()
