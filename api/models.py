@@ -75,11 +75,11 @@ class Advertisement(models.Model):
     description = models.TextField(max_length=100,null=True , blank=True)
     images = models.ManyToManyField(Images)
     categories = models.CharField(max_length=30, choices=CHOICES, null=False, blank=False)
-
+    is_trend = models.BooleanField(default=False)
+ 
     def __str__(self):
         return self.title
-
-   
+    
 
 @receiver(pre_delete, sender=Advertisement)
 def delete_advertisement_images(sender, instance, **kwargs):
