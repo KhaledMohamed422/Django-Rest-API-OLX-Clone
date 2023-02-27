@@ -5,6 +5,7 @@ app_name = 'api'
 
 urlpatterns = [
     path('home/',views.Home,name='Home' ),
-    path('Items/<slug:subcategory>/',views.Home,name='subcategory'),
+    path('Items/<slug:subcategory>/',views.Category_Advertisements,name='Category_Advertisements'),
+    path('Items/<uuid:Id>/',views.blank,name='blank'),
 
 ]

@@ -26,7 +26,7 @@ class Home_AdvertisementSerializers(serializers.ModelSerializer):
         for category, subcategories in obj.CHOICES:
             for subcategory, label in subcategories:
                 if obj.categories == subcategory:
-                    url_name = 'api:subcategory'
+                    url_name = 'api:Category_Advertisements'
                     url = reverse(url_name, args=[subcategory])
                     urls[subcategory] = self.context['request'].build_absolute_uri(url)
         return urls
@@ -39,13 +39,28 @@ class Home_AdvertisementSerializers(serializers.ModelSerializer):
          '''
 
 class Home_is_trend_AdvertisementSerializers(serializers.ModelSerializer):
-        '''
-        output {ad:ter == 1}
+    url = serializers.HyperlinkedIdentityField(
+        view_name='api:blank',
+        lookup_field='Id'
+    )
+    class Meta:
+        model = Advertisement
+        fields = ['images', 'price', 'url']
+ 
 
-        '''
-        class Meta:
-            model = Advertisement
-            fields = ['images','price']
+class Category_AdvertisementsSerializers(serializers.ModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='api:blank',
+        lookup_field='Id'
+    )
+   
+    class Meta:
+        model = Advertisement
+        fields = ['title','company','images', 'price', 'description','url']
+
+
+        
                 
     
         

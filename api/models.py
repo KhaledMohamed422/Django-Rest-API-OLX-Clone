@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+import uuid
 # Create your models here.
 
 
@@ -26,7 +27,8 @@ class Buyer(models.Model):
 class Images (models.Model):
     
     images = models.ImageField(upload_to='Images/Product/')    
-    
+    def __str__(self):
+        return str(self.images)
 
 class Advertisement(models.Model):
     
@@ -64,7 +66,7 @@ class Advertisement(models.Model):
         )
     ),
    ]
-
+    Id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     buyer = models.ForeignKey(Buyer,  on_delete=models.CASCADE)
     title = models.CharField(max_length=20 , null=False , blank= False)
     views = models.IntegerField(default=0,null=True , blank=True)

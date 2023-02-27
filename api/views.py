@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from .models import Advertisement
-from .Serializers import Home_AdvertisementSerializers
+from .Serializers import Home_AdvertisementSerializers , Home_is_trend_AdvertisementSerializers , Category_AdvertisementsSerializers
 
 @api_view(['get'])
 def Home(request):
@@ -22,8 +22,27 @@ def Home(request):
     if instance:
         serializer = Home_AdvertisementSerializers(instance, context={'request': request}, many=True)
         data = serializer.data
-#     is_ternd_instance =  instance.filter(is_trend=True)
-#    if is_ternd_instance:
-#          serializer = Home_is_trend_AdvertisementSerializers(instance)
-#          data += serializer.data
+    is_ternd_instance =  instance.filter(is_trend=True)
+    
+    if is_ternd_instance:
+         serializer = Home_is_trend_AdvertisementSerializers(is_ternd_instance, context={'request': request}, many=True)
+         data.append(serializer.data)
     return Response(data)
+
+
+@api_view(['get'])
+def Category_Advertisements(request,subcategory):
+    '''
+    This view should to show all Advertisements for
+    any Category at the slug 
+    '''
+    instance = Advertisement.objects.filter(categories=subcategory)
+    if instance:
+        serializer = Category_AdvertisementsSerializers(instance, many=True,context={'request': request})
+        data = serializer.data
+    return Response(data)
+
+
+@api_view(['get'])
+def blank(request):
+    return Response({})
