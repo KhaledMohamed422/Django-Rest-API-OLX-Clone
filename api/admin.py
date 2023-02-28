@@ -5,5 +5,6 @@ admin.site.register(City)
 admin.site.register(Buyer)
 admin.site.register(Images)
 admin.site.register(Advertisement)
+admin.site.register(Categories)
 
 

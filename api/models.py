@@ -12,7 +12,7 @@ class City (models.Model):
     
     def __str__(self):
         return self.name
-    
+        
 class Buyer(models.Model):
     
     city  = models.ForeignKey(City,  on_delete=models.CASCADE)
@@ -23,15 +23,12 @@ class Buyer(models.Model):
 
         return self.user.username
 
-
 class Images (models.Model):
     
     images = models.ImageField(upload_to='Images/Product/')    
     def __str__(self):
         return str(self.images)
-
-class Advertisement(models.Model):
-    
+class Categories(models.Model):
     CHOICES = [
     ('Mobiles', (
             ('Mobile_Phones', 'Mobile Phones'),
@@ -66,6 +63,14 @@ class Advertisement(models.Model):
         )
     ),
    ]
+    categories = models.CharField(max_length=30, choices=CHOICES, null=False, blank=False)
+    view =  models.IntegerField(default=0,null=True , blank=True)
+    
+    def __str__(self) -> str:
+        return str(self.CHOICES[1][self.category])
+
+class Advertisement(models.Model):
+    
     Id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     buyer = models.ForeignKey(Buyer,  on_delete=models.CASCADE)
     title = models.CharField(max_length=20 , null=False , blank= False)
@@ -75,14 +80,14 @@ class Advertisement(models.Model):
     company = models.CharField(max_length=20 , null=False , blank= False)
     state = models.BooleanField(default=False)
     description = models.TextField(max_length=100,null=True , blank=True)
+    time_date = models.DateTimeField(auto_now=True)
+    Categories = models.ForeignKey(Categories,  on_delete=models.CASCADE)
     images = models.ManyToManyField(Images)
-    categories = models.CharField(max_length=30, choices=CHOICES, null=False, blank=False)
     is_trend = models.BooleanField(default=False)
  
     def __str__(self):
         return self.title
     
-
 @receiver(pre_delete, sender=Advertisement)
 def delete_advertisement_images(sender, instance, **kwargs):
     for image in instance.images.all():
