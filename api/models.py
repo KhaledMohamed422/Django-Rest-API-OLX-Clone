@@ -65,9 +65,11 @@ class Categories(models.Model):
    ]
     categories = models.CharField(max_length=30, choices=CHOICES, null=False, blank=False)
     view =  models.IntegerField(default=0,null=True , blank=True)
-    
-    def __str__(self) -> str:
-        return str(self.CHOICES[1][self.category])
+    def __str__(self):
+     for category, subcategories in self.CHOICES:
+            for subcategory, label in subcategories:
+                if self.categories == subcategory:
+                    return f"{category} - {subcategory}"
 
 class Advertisement(models.Model):
     
