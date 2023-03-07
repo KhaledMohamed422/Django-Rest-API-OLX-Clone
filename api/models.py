@@ -8,6 +8,7 @@ import uuid
 
 class City (models.Model):
     
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=20,blank=False,null=False,unique=True)
     
     def __str__(self):
@@ -15,6 +16,7 @@ class City (models.Model):
         
 class Buyer(models.Model):
     
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     city  = models.ForeignKey(City,  on_delete=models.CASCADE)
     user  = models.ForeignKey(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=12,blank=True,null=True)
@@ -25,10 +27,12 @@ class Buyer(models.Model):
 
 class Images (models.Model):
     
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     images = models.ImageField(upload_to='Images/Product/')    
     def __str__(self):
         return str(self.images)
 class Categories(models.Model):
+    
     CHOICES = [
     ('Mobiles', (
             ('Mobile_Phones', 'Mobile Phones'),
@@ -63,17 +67,28 @@ class Categories(models.Model):
         )
     ),
    ]
+    
+    class Meta:
+        verbose_name_plural = "categories"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     categories = models.CharField(max_length=30, choices=CHOICES, null=False, blank=False)
     view =  models.IntegerField(default=0,null=True , blank=True)
+    # def __str__(self):
+    #  for category, subcategories in self.CHOICES:
+    #         for subcategory, label in subcategories:
+    #             if self.categories == subcategory:
+    #                 return f"{category} - {subcategory}"
     def __str__(self):
-     for category, subcategories in self.CHOICES:
+        for category, subcategories in self.CHOICES:
             for subcategory, label in subcategories:
                 if self.categories == subcategory:
-                    return f"{category} - {subcategory}"
+                    return category
+
 
 class Advertisement(models.Model):
     
-    Id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     buyer = models.ForeignKey(Buyer,  on_delete=models.CASCADE)
     title = models.CharField(max_length=20 , null=False , blank= False)
     views = models.IntegerField(default=0,null=True , blank=True)
